@@ -14,3 +14,15 @@ h1 {
     font-size: 40px;
     font-family: monospace;
 }
+
+.positivo {
+    color: #16c784;
+}
+
+.negativo {
+    color: #ea3943;
+}
+
+.neutro{
+    color: #e8e8e8;
+}
