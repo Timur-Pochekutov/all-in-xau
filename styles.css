@@ -14,7 +14,7 @@ h1 {
 
 .precio {
     color: #d4af37;
-    font-size: 40px;
+    font-size: 50px;
     font-family: monospace;
 }
 
@@ -33,4 +33,12 @@ h1 {
 .container {
     max-width: 1100px;
     margin: 0 auto;
+}
+
+.card {
+    background-color: #17171d;
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 15px;
 }
