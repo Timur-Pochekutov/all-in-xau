@@ -7,7 +7,9 @@ body {
 
 h1 {
     color: #d4af37;
+    font-size: 60px;
     text-shadow: 0 0 10px #d4af37;
+    text-align: center;
 }
 
 .precio {
