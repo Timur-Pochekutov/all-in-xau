@@ -11,4 +11,6 @@ h1 {
 
 .precio {
     color: #d4af37;
+    font-size: 40px;
+    font-family: monospace;
 }
