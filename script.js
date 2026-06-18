@@ -8,3 +8,4 @@ async function getGoldPrice() {
 }
 
 getGoldPrice();
+setInterval(getGoldPrice, 10000);
