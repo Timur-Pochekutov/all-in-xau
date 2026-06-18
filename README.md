@@ -4,4 +4,4 @@ Sitio web informativo dedicado al oro (XAU), tanto físico como en su versión c
 Proyecto personal en construcción, hecho por etapas como portfolio de visualización de datos.
 
 ## Estado
-En desarrollo — Fase 2: backend en Python (servidor de sesión XAU).
+En desarrollo — Fase 2: backend en Python (servidor de sesión XAU)."
