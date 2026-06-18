@@ -4,6 +4,7 @@ import threading
 import requests
 import time
 from datetime import datetime
+from flask_cors import CORS
 
 def ciclo_precio():
     global precio_actual, precio_apertura, maximo, minimo
@@ -36,6 +37,7 @@ def ciclo_precio():
         time.sleep(10)
 
 app = Flask(__name__)
+CORS(app)
 
 precio_actual = None
 precio_apertura = None

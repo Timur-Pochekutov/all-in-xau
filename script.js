@@ -1,11 +1,9 @@
-async function getGoldPrice() {
-    const url = "https://api.gold-api.com/price/XAU";
-    const response = await fetch(url);
+async function actualizarDatos() {
+    const response = await fetch("http://localhost:5000/precio-sesion");
     const data = await response.json();
     
-    const precio = document.querySelector(".precio");
-    precio.textContent = data.price.toFixed(2);
+    document.querySelector(".precio").textContent = data.precio.toFixed(2);
 }
 
-getGoldPrice();
-setInterval(getGoldPrice, 10000);
+actualizarDatos();
+setInterval(actualizarDatos, 10000);
