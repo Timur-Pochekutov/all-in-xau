@@ -3,6 +3,7 @@ import threading
 
 import requests
 import time
+import os 
 from datetime import datetime
 from flask_cors import CORS
 
@@ -61,4 +62,5 @@ def precio_sesion():
 if __name__ == "__main__":
     hilo = threading.Thread(target=ciclo_precio, daemon=True)
     hilo.start()
-    app.run(port=5000)
+    puerto = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=puerto)
