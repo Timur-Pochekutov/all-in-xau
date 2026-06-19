@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import threading
 
 import requests
@@ -8,8 +8,7 @@ from datetime import datetime
 from flask_cors import CORS
 
 def ciclo_precio():
-    global precio_actual, precio_apertura, maximo, minimo
-    fecha_apertura = None
+    global precio_actual, precio_apertura, maximo, minimo, fecha_apertura
     while True:
         ahora = datetime.now()
         hoy = ahora.date()
@@ -21,13 +20,6 @@ def ciclo_precio():
             fecha_apertura = hoy
             maximo = precio_actual
             minimo = precio_actual
-
-        if fecha_apertura != hoy and ahora.hour >= 10:
-            entrada = input("Precio a las 10:00 ART: ")
-            precio_apertura = float(entrada)
-            fecha_apertura = hoy
-            maximo = precio_apertura
-            minimo = precio_apertura
 
         if precio_apertura is not None:
             if precio_actual > maximo:
@@ -44,6 +36,8 @@ precio_actual = None
 precio_apertura = None
 maximo = None
 minimo = None
+fecha_apertura = None
+CLAVE_ADMIN = os.environ.get("CLAVE_ADMIN")
 
 @app.route("/precio-sesion")
 def precio_sesion():
@@ -58,6 +52,25 @@ def precio_sesion():
         "minimo": minimo,
         "cambio_pct": cambio
     })
+
+@app.route("/registrar-apertura")
+def registrar_apertura():
+    global precio_apertura, maximo, minimo, fecha_apertura
+    
+    clave = request.args.get("clave")
+    if CLAVE_ADMIN is None or clave != CLAVE_ADMIN:
+        return jsonify({"error": "no autorizado"}), 403
+    
+    valor = request.args.get("precio")
+    if valor is None:
+        return jsonify({"error": "falta el parametro precio"}), 400
+    
+    precio_apertura = float(valor)
+    maximo = precio_apertura
+    minimo = precio_apertura
+    fecha_apertura = datetime.now().date()
+    return jsonify({"mensaje" : "apertura registrada", "apertura": precio_apertura})
+    
 
 if __name__ == "__main__":
     hilo = threading.Thread(target=ciclo_precio, daemon=True)
