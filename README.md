@@ -7,4 +7,4 @@ La idea del proyecto es crear una web que sea una herramienta para cualquier tip
 Proyecto personal en construcción, hecho por etapas como portfolio de visualización de datos.
 
 ## Estado
-En desarrollo — Fase 2: backend en Python (servidor de sesión XAU). Completado.
+En desarrollo — Fase 2: backend en Python (servidor de sesión XAU). Completado."
