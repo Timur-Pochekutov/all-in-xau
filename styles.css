@@ -12,6 +12,10 @@ h1 {
     text-align: center;
 }
 
+h1 a {
+    color: inherit;
+    text-decoration: none;
+}
 .precio {
     color: #d4af37;
     font-size: 50px;
