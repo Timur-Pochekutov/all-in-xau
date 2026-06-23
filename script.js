@@ -21,3 +21,16 @@ async function actualizarDatos() {
 }
 actualizarDatos();
 setInterval(actualizarDatos, 10000);
+
+async function actualizarMercados() {
+        const response = await fetch ("https://all-in-xau-backend.onrender.com/mercados");
+        const data = await response.json();
+
+        document.querySelector(".mkt-usd").textContent = data.USD !== null ? data.USD.toFixed(2) : "_";
+        document.querySelector(".mkt-eur").textContent = data.EUR !== null ? data.EUR.toFixed(2) : "_";
+        document.querySelector(".mkt-gbp").textContent = data.GBP !== null ? data.GBP.toFixed(2) : "_";
+        document.querySelector(".mkt-jpy").textContent = data.JPY !== null ? data.JPY.toFixed(2) : "_";
+        document.querySelector(".mkt-aud").textContent = data.AUD !== null ? data.AUD.toFixed(2) : "_";
+    }
+    actualizarMercados();
+    setInterval(actualizarMercados, 10000);
