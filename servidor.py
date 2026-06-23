@@ -28,6 +28,23 @@ def ciclo_precio():
                 minimo = precio_actual 
 
         time.sleep(10)
+def actualizar_tasas():
+    global tasas_cambio, ultima_actualizacion_tasas
+    while True:
+        try:
+            response = requests.get("https://api.frankfurter.dev/v2/rates?base=USD&quotes=EUR,GBP,JPY,AUD")
+            data = response.json()
+
+            nuevas_tasas = {}
+            for fila in data:
+                nuevas_tasas[fila["quote"]] = fila["rate"]
+
+            tasas_cambio = nuevas_tasas
+            ultima_actualizacion_tasas = datetime.now()
+        except Exception as e:
+            print(f"Error actualizando tasas: {e}")
+
+        time.sleep(3600)
 
 app = Flask(__name__)
 CORS(app)
@@ -37,6 +54,10 @@ precio_apertura = None
 maximo = None
 minimo = None
 fecha_apertura = None
+tasas_cambio = {}
+ultima_actualizacion_tasas = None
+precios_mercados = {}
+
 CLAVE_ADMIN = os.environ.get("CLAVE_ADMIN")
 
 @app.route("/precio-sesion")
@@ -70,11 +91,32 @@ def registrar_apertura():
     minimo = precio_apertura
     fecha_apertura = datetime.now().date()
     return jsonify({"mensaje" : "apertura registrada", "apertura": precio_apertura})
-    
+
+@app.route("/mercados")
+def mercados():
+    if precio_actual is None or not tasas_cambio:
+        return jsonify({
+            "USD": None,
+            "EUR": None,
+            "GBP": None,
+            "JPY": None,
+            "AUD": None
+            }) 
+    return jsonify({
+        "USD": round(precio_actual, 2),
+        "EUR": round(precio_actual * tasas_cambio["EUR"], 2),
+        "GBP": round(precio_actual * tasas_cambio["GBP"], 2),
+        "JPY": round(precio_actual * tasas_cambio["JPY"], 2),
+        "AUD": round(precio_actual * tasas_cambio["AUD"], 2)
+        }) 
 
 if __name__ == "__main__":
     hilo = threading.Thread(target=ciclo_precio, daemon=True)
     hilo.start()
+
+    hilo_tasas = threading.Thread(target=actualizar_tasas, daemon=True)
+    hilo_tasas.start()
+    
     puerto = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=puerto)
     
