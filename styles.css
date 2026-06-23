@@ -58,6 +58,10 @@ h1 a {
 .bento {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+        "grande etf invertir"
+        "grande crypto noticias";
     gap: 16px;
     margin: 24px 0;
 }
@@ -71,3 +75,12 @@ h1 a {
     color: #e8e8e8;
     display: block;
 }
+
+.bento-grande {
+    grid-area: grande;
+}
+
+.bento-etf { grid-area: etf; }
+.bento-invertir { grid-area: invertir; }
+.bento-crypto { grid-area: crypto; }
+.bento-noticias { grid-area: noticias; }
