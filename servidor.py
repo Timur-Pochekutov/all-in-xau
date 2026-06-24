@@ -5,17 +5,19 @@ import requests
 import time
 import os 
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from flask_cors import CORS
 
 def ciclo_precio():
     global precio_actual, precio_apertura, maximo, minimo, fecha_apertura
+    zona_ar = ZoneInfo("America/Argentina/Buenos_Aires")
     while True:
-        ahora = datetime.now()
+        ahora = datetime.now(zona_ar)
         hoy = ahora.date()
         response = requests.get("https://api.gold-api.com/price/XAU")
         precio_actual = response.json()["price"]
 
-        if ahora.hour == 10 and ahora.minute == 0 and fecha_apertura != hoy:
+        if ahora.hour == 10 and ahora.minute == 30 and fecha_apertura != hoy:
             precio_apertura = precio_actual
             fecha_apertura = hoy
             maximo = precio_actual
@@ -82,14 +84,21 @@ def registrar_apertura():
     if CLAVE_ADMIN is None or clave != CLAVE_ADMIN:
         return jsonify({"error": "no autorizado"}), 403
     
+    zona_ar = ZoneInfo("America/Argentina/Buenos_Aires")
+    hoy = datetime.now(zona_ar).date()
+
+    forzar = request.args.get("forzar")
+    if fecha_apertura == hoy and forzar != "true":
+        return jsonify({"error": "la apertura de hoy ya esta registrada, usa &forzar=true para sobreescribir"}), 409
+
     valor = request.args.get("precio")
     if valor is None:
-        return jsonify({"error": "falta el parametro precio"}), 400
+        return jsonify({"error: falta el parametro precio"}), 400
     
     precio_apertura = float(valor)
     maximo = precio_apertura
     minimo = precio_apertura
-    fecha_apertura = datetime.now().date()
+    fecha_apertura = hoy
     return jsonify({"mensaje" : "apertura registrada", "apertura": precio_apertura})
 
 @app.route("/mercados")
