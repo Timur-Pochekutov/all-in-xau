@@ -46,7 +46,7 @@ async function actualizarETF() {
     cambioEl.className = "etf-cambio";
     
     if (data.cambio_pct > 0) cambioEl.classList.add("positivo");
-    else if (data.cambio_pct < 0) cambioEl.classList.add("positivo");
+    else if (data.cambio_pct < 0) cambioEl.classList.add("negativo");
     else if (data.cambio_pct === 0) cambioEl.classList.add("neutro"); 
 }
 
