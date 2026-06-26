@@ -48,6 +48,28 @@ def actualizar_tasas():
 
         time.sleep(3600)
 
+FINNHUB_KEY = os.environ.get("FINNHUB_KEY")
+
+def actualizar_etf():
+    global datos_etf
+    while True:
+        try:
+            url = f"https://finnhub.io/api/v1/quote?symbol=GLD&token={FINNHUB_KEY}"
+            response = requests.get(url)
+            data = response.json()
+
+            datos_etf = {
+                "precio": data["c"],
+                "cambio": data["d"],
+                "cambio_pct": data["dp"],
+                "maximo": data["h"],
+                "minimo": data["l"]
+            }
+        except Exception as e:
+            print(f"Error actualizando ETF: {e}")
+
+        time.sleep(60)
+
 app = Flask(__name__)
 CORS(app)
 
@@ -59,6 +81,7 @@ fecha_apertura = None
 tasas_cambio = {}
 ultima_actualizacion_tasas = None
 precios_mercados = {}
+datos_etf = {}
 
 CLAVE_ADMIN = os.environ.get("CLAVE_ADMIN")
 
@@ -93,7 +116,7 @@ def registrar_apertura():
 
     valor = request.args.get("precio")
     if valor is None:
-        return jsonify({"error: falta el parametro precio"}), 400
+        return jsonify({"error": "falta el parametro precio"}), 400
     
     precio_apertura = float(valor)
     maximo = precio_apertura
@@ -119,12 +142,28 @@ def mercados():
         "AUD": round(precio_actual * tasas_cambio["AUD"], 2)
         }) 
 
+@app.route("/etf")
+def etf():
+    if not datos_etf:
+        return jsonify({
+            "precio": None,
+            "cambio": None,
+            "cambio_pct": None,
+            "maximo": None,
+            "minimo": None
+        })
+    
+    return jsonify(datos_etf)
+
 if __name__ == "__main__":
     hilo = threading.Thread(target=ciclo_precio, daemon=True)
     hilo.start()
 
     hilo_tasas = threading.Thread(target=actualizar_tasas, daemon=True)
     hilo_tasas.start()
+
+    hilo_etf = threading.Thread(target=actualizar_etf, daemon=True)
+    hilo_etf.start()
     
     puerto = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=puerto)

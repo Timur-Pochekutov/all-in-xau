@@ -34,3 +34,21 @@ async function actualizarMercados() {
     }
     actualizarMercados();
     setInterval(actualizarMercados, 10000);
+
+async function actualizarETF() {
+    const response = await fetch("https://all-in-xau-backend.onrender.com/etf")
+    const data = await response.json();
+
+    document.querySelector(".etf-precio").textContent = data.precio !== null ? data.precio.toFixed(2) : "-";
+
+    const cambioEl = document.querySelector(".etf-cambio");
+    cambioEl.textContent = data.cambio_pct !== null ? data.cambio_pct.toFixed(2) + "%" : "-";
+    cambioEl.className = "etf-cambio";
+    
+    if (data.cambio_pct > 0) cambioEl.classList.add("positivo");
+    else if (data.cambio_pct < 0) cambioEl.classList.add("positivo");
+    else if (data.cambio_pct === 0) cambioEl.classList.add("neutro"); 
+}
+
+actualizarETF();
+setInterval(actualizarETF, 60000);
