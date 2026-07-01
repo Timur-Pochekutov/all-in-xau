@@ -18,10 +18,22 @@ h1 a {
     color: inherit;
     text-decoration: none;
 }
+
+#cotizacion p {
+    font-weight:600;
+}
+
 .precio {
     color: #d4af37;
     font-size: 50px;
-    font-family: monospace;
+    font-family: 'Roboto', monospace; 
+    font-weight: 500;
+
+}.mkt-valor{
+    color: #e8e8e8;
+    font-family: 'Roboto', monospace;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .positivo {
@@ -34,10 +46,21 @@ h1 a {
 
 .maximo {
     color: #16c784;
+    font-family: 'Roboto', monospace;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .minimo {
     color: #ea3943;
+    font-family: 'Roboto', monospace;
+    font-size: 18px;
+    font-weight: 600;
+}
+.cambio {
+    font-family: 'Roboto', monospace;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .neutro{
@@ -83,6 +106,10 @@ h1 a {
     grid-area: grande;
 }
 
+.bento-grande p {
+    font-weight: 600;
+}
+
 .bento-etf { grid-area: etf; }
 .bento-invertir { grid-area: invertir; }
 .bento-crypto { grid-area: crypto; }
@@ -93,11 +120,4 @@ h1 a {
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-}
-
-.mkt-valor{
-    color: #e8e8e8;
-    font-family: monospace;
-    font-size: 18px;
-    font-weight: 600;
-}
+}  

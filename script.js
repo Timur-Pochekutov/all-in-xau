@@ -39,9 +39,9 @@ async function actualizarETF() {
     const response = await fetch("https://all-in-xau-backend.onrender.com/etf")
     const data = await response.json();
 
-    document.querySelector(".mkt-valor").textContent = data.precio !== null ? data.precio.toFixed(2) : "-";
+    document.querySelector(".etf-precio").textContent = data.precio !== null ? data.precio.toFixed(2) : "-";
 
-    const cambioEl = document.querySelector(".etf-cambio mkt-valor");
+    const cambioEl = document.querySelector(".etf-cambio");
     cambioEl.textContent = data.cambio_pct !== null ? data.cambio_pct.toFixed(2) + "%" : "-";
     cambioEl.className = "etf-cambio mkt-valor";
     
