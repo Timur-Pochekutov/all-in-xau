@@ -49,6 +49,30 @@ async function actualizarETF() {
     else if (data.cambio_pct < 0) cambioEl.classList.add("negativo");
     else if (data.cambio_pct === 0) cambioEl.classList.add("neutro"); 
 }
-
 actualizarETF();
 setInterval(actualizarETF, 60000);
+
+async function actualizarCrypto() {
+    const response = await fetch("https://all-in-xau-backend.onrender.com/crypto");
+    const data = await response.json();
+
+    document.querySelector(".crypto-xaut-precio").textContent = data.xaut.precio !== null ? data.xaut.precio.toFixed(2) : "-";
+    document.querySelector(".crypto-paxg-precio").textContent = data.paxg.precio !== null ? data.paxg.precio.toFixed(2) : "-";
+
+    const xautCambioEl = document.querySelector(".crypto-xaut-cambio");
+    xautCambioEl.textContent = data.xaut.cambio_pct !== null ? data.xaut.cambio_pct.toFixed(2) + "%" : "-";
+    xautCambioEl.className = "crypto-xaut-cambio mkt-valor";
+    if (data.xaut.cambio_pct > 0) xautCambioEl.classList.add("positivo");
+    else if (data.xaut.cambio_pct < 0) xautCambioEl.classList.add("negativo");
+    else if (data.xaut.cambio_pct === 0) xautCambioEl.classList.add("neutro");
+
+    const paxgCambioEl = document.querySelector(".crypto-paxg-cambio");
+    paxgCambioEl.textContent = data.paxg.cambio_pct !== null ? data.paxg.cambio_pct.toFixed(2) + "%" : "-";
+    paxgCambioEl.className = "crypto-paxg-cambio mkt-valor";
+    if (data.paxg.cambio_pct > 0) paxgCambioEl.classList.add("positivo");
+    else if (data.paxg.cambio_pct < 0) paxgCambioEl.classList.add("negativo");
+    else if (data.paxg.cambio_pct === 0) paxgCambioEl.classList.add("neutro");
+}
+
+actualizarCrypto();
+setInterval(actualizarCrypto, 60000);
