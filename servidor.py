@@ -70,6 +70,30 @@ def actualizar_etf():
 
         time.sleep(60)
 
+def actualizar_crypto():
+    global datos_crypto
+    while True:
+        try:
+            url = f"https://api.coingecko.com/api/v3/simple/price?ids=tether-gold,pax-gold&vs_currencies=usd&include_24hr_change=true"
+            response = requests.get(url)
+            data = response.json()
+
+            datos_crypto = {
+                "xaut": {
+                "precio": data["tether-gold"]["usd"],
+                "cambio_pct": data["tether-gold"]["usd_24h_change"]
+                },
+                "paxg": {
+                    "precio": data["pax-gold"]["usd"],
+                    "cambio_pct": data["pax-gold"]["usd_24h_change"]
+                }
+            }
+        except Exception as e:
+            print(f"Error actualizando crypto: {e}")
+
+        time.sleep(60)
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -82,6 +106,7 @@ tasas_cambio = {}
 ultima_actualizacion_tasas = None
 precios_mercados = {}
 datos_etf = {}
+datos_crypto = {}
 
 CLAVE_ADMIN = os.environ.get("CLAVE_ADMIN")
 
@@ -155,6 +180,15 @@ def etf():
     
     return jsonify(datos_etf)
 
+@app.route("/crypto")
+def crypto():
+    if not datos_crypto:
+        return jsonify({
+            "xaut": {"precio": None, "cambio_pct": None},
+            "paxg": {"precio": None, "cambio_pct": None}
+        })
+    return jsonify(datos_crypto)
+
 if __name__ == "__main__":
     hilo = threading.Thread(target=ciclo_precio, daemon=True)
     hilo.start()
@@ -164,6 +198,9 @@ if __name__ == "__main__":
 
     hilo_etf = threading.Thread(target=actualizar_etf, daemon=True)
     hilo_etf.start()
+
+    hilo_crypto = threading.Thread(target=actualizar_crypto, daemon=True)
+    hilo_crypto.start()
     
     puerto = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=puerto)
